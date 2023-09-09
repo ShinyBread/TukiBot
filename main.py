@@ -41,6 +41,7 @@ class Tuki_Bot(commands.Bot):
     async def on_ready(self):
         print(f'{self.user} está listo!')
         await self.setup_extensions()
+        self.change_status.start()
 
 TukiBot = Tuki_Bot()
 TukiBot.run(TOKEN)
