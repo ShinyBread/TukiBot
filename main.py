@@ -10,12 +10,12 @@ TOKEN = os.getenv('TOKEN')
 
 status = cycle(["Tuki", "tuki"])
 
-class ShinyBotTest(commands.Bot):
+class Tuki_Bot(commands.Bot):
     def __init__(self):
         super().__init__(
             command_prefix='!',
             intents=discord.Intents.all(),
-            application_id=1115333103213355030
+            application_id=1149487348753629288
         )
         self.initial_extensions = []
 
@@ -42,5 +42,5 @@ class ShinyBotTest(commands.Bot):
         print(f'{self.user} está listo!')
         await self.setup_extensions()
 
-ShinyBot = ShinyBotTest()
-ShinyBot.run(TOKEN)
+TukiBot = Tuki_Bot()
+TukiBot.run(TOKEN)
