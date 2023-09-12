@@ -5,7 +5,7 @@ from discord.ext import commands, tasks
 from itertools import cycle
 from pathlib import Path
 
-load_dotenv("TOKEN.env")  
+load_dotenv(".env")  
 TOKEN = os.getenv('TOKEN')
 
 status = cycle(["Tuki", "tuki"])
