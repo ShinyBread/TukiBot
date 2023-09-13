@@ -11,7 +11,7 @@ class tusic(commands.Cog):
 
         self.is_playing = False
         self.is_paused = False
-        self.music_queue = []
+        self.music_queue = deque()
         self.YDL_OPTIONS = {'format': 'bestaudio', 'verbose': True}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
         self.vc = None
@@ -49,15 +49,15 @@ class tusic(commands.Cog):
             else:
                 await self.vc.move_to(self.music_queue[0][1])
             
-            self.music_queue.pop(0)
+            self.music_queue.popleft()
             self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
         else:
             self.is_playing = False
     
     @app_commands.command(
-    name='play',
-    description='MUSICA TITO!!!'
-)
+        name='play',
+        description='MUSICA TITO!!!'
+    )
     async def play(self, interaction: discord.Interaction, url :str = None):
         voice_channel= interaction.user.voice.channel
         if voice_channel is None:
@@ -65,6 +65,7 @@ class tusic(commands.Cog):
             await interaction.response.send_message(embed=embed)
         elif self.is_paused:
             self.vc.resume()
+            self.is_paused = False
         else:
             song = self.get_yt_video_info(url)
             if type(song) == type(True):
@@ -112,7 +113,7 @@ class tusic(commands.Cog):
         description="Salta un temazo"
     )
     async def skip(self, interaction: discord.Interaction):
-        if self.vc != None and self.vc:
+        if self.vc is not None and self.is_playing:
             self.vc.stop()
             await self.play_music(interaction)
             embed = discord.Embed(title="Se salto un temazo", color=discord.Color.yellow())
