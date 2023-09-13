@@ -16,10 +16,10 @@ class tusic(commands.Cog):
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
         self.vc = None
 
-    def search_yt(self, item):
+    def get_yt_video_info(self, url):
         with youtube_dlc.YoutubeDL(self.YDL_OPTIONS) as ydl:
             try:
-                info = ydl.extract_info("ytsearch: %s" % item, download= False)['entries'][0]
+                info = ydl.extract_info(url, download=False)
             except Exception:
                 return False
         return {'source': info['formats'][0]['url'], 'title': info['title'], 'thumbnail': info.get('thumbnail')}
@@ -55,11 +55,10 @@ class tusic(commands.Cog):
             self.is_playing = False
     
     @app_commands.command(
-        name='play',
-        description='MUSICA TITO!!!'
-    )
+    name='play',
+    description='MUSICA TITO!!!'
+)
     async def play(self, interaction: discord.Interaction, url :str = None):
-        query= ''.join(url)
         voice_channel= interaction.user.voice.channel
         if voice_channel is None:
             embed = discord.Embed(title="{} entra al vc primero, BREA".format(interaction.user.name), color= discord.Color.red())
@@ -67,7 +66,7 @@ class tusic(commands.Cog):
         elif self.is_paused:
             self.vc.resume()
         else:
-            song = self.search_yt(query)
+            song = self.get_yt_video_info(url)
             if type(song) == type(True):
                 embed = discord.Embed(title="No se encontro el video", color=discord.Color.red())
                 await interaction.response.send_message(embed=embed)
